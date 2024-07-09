@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Bird</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&display=swap">
     <style>
         body {
             display: flex;
@@ -11,7 +12,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(to bottom, #87CEFA, #f0f0f0); /* Gradient background */
+            background: linear-gradient(to bottom, #87CEFA, #f0f0f0);
             font-family: 'Arial', sans-serif;
         }
         #gameCanvas {
@@ -29,10 +30,40 @@
         .game-info span {
             font-weight: bold;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            #gameCanvas {
+                width: 60%;
+                height: auto;
+            }
+        }
+        @media (max-width: 768px) {
+            #gameCanvas {
+                width: 80%;
+                height: auto;
+            }
+            .game-info {
+                top: 10px;
+                left: 10px;
+                font-size: 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            #gameCanvas {
+                width: 100%;
+                height: auto;
+            }
+            .game-info {
+                top: 5px;
+                left: 5px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <canvas id="gameCanvas"></canvas>
     <div class="game-info">Score: <span id="score">0</span></div>
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -72,6 +103,14 @@
         // Game state
         let score = 0;
         let gameOver = false;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth > 400 ? 400 : window.innerWidth;
+            canvas.height = window.innerHeight > 600 ? 600 : window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
         function drawBird() {
             ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
@@ -150,7 +189,7 @@
                 updatePipes();
                 setTimeout(() => requestAnimationFrame(gameLoop), FRAME_INTERVAL);
             } else {
-                ctx.font = '48px Arial';
+                ctx.font = '48px Bangers, Arial';
                 ctx.fillStyle = 'red';
                 ctx.fillText('Game Over!', canvas.width / 2 - 100, canvas.height / 2);
             }
@@ -176,7 +215,6 @@
             }
         });
 
-        // Wait for images to load before starting the game
         Promise.all([
             new Promise(resolve => birdImg.onload = resolve),
             new Promise(resolve => bgImg.onload = resolve)
